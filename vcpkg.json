@@ -1,0 +1,10 @@
+{
+  "name": "vas",
+  "version": "1.0.0",
+  "homepage": "https://github.com/eUltrabyte/vas",
+  "license": "MIT",
+  "dependencies": [
+    "vulkan",
+    "vulkan-headers"
+  ]
+}
