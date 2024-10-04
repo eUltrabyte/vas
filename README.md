@@ -1,15 +1,15 @@
-# Vulkan Application Setup
-
-vas is library for vulkan rendering api. It uses cmake, c++20 and vulkan headers. The goal of this project is to simplify first steps in building vulkan-based app.
-
 [![Language](https://img.shields.io/badge/language-C++-blue.svg)](https://isocpp.org/)
 [![Standard](https://img.shields.io/badge/c%2B%2B-20-blue.svg)](https://en.wikipedia.org/wiki/C%2B%2B#Standardization)
 [![MIT License](https://img.shields.io/badge/License-MIT-green.svg)](https://choosealicense.com/licenses/mit/)
 
+# Vulkan Application Setup
+
+vas is library for vulkan rendering api. It uses cmake, c++20 and vulkan headers. The goal of this project is to simplify first steps in building vulkan-based app.
+
 ### TODO
 
 - [x] Instance creation
-- [ ] Debug messenger creation
+- [x] Debug messenger creation
 - [ ] Getting physical devices
 - [ ] Device creation
 - [ ] Getting queues
