@@ -17,14 +17,33 @@ namespace vas {
         VulkanAvailable
     };
 
+    struct VAS_API InstanceProps {
+        InstanceProps(std::string_view title = "vas", std::span<const char*> extensions = std::span<const char*>(), std::span<const char*> layers = std::span<const char*>(), const InstanceVersion& instanceVersion = InstanceVersion::VulkanAvailable, bool validationLayers = false, bool debugMessenger = false, PFN_vkDebugUtilsMessengerCallbackEXT debugMessengerCallback = nullptr) 
+        : title(title), extensions(extensions), layers(layers), instanceVersion(instanceVersion), validationLayers(validationLayers), debugMessenger(debugMessenger), debugMessengerCallback(debugMessengerCallback) { }
+        ~InstanceProps() = default;
+
+        std::string_view title;
+        std::span<const char*> extensions;
+        std::span<const char*> layers;
+        InstanceVersion instanceVersion;
+        bool validationLayers;
+        bool debugMessenger;
+        PFN_vkDebugUtilsMessengerCallbackEXT debugMessengerCallback;
+    };
+
     class VAS_API Instance {
     public:
-        Instance(std::string_view title = "vas", std::span<const char*> extensions = std::span<const char*>(), std::span<const char*> layers = std::span<const char*>(), const InstanceVersion& instanceVersion = InstanceVersion::VulkanAvailable, bool validationLayers = false, bool debugMessenger = false);
+        Instance(std::string_view title = "vas", std::span<const char*> extensions = std::span<const char*>(), std::span<const char*> layers = std::span<const char*>(), const InstanceVersion& instanceVersion = InstanceVersion::VulkanAvailable, bool validationLayers = false, bool debugMessenger = false, PFN_vkDebugUtilsMessengerCallbackEXT debugMessengerCallback = nullptr);
+        Instance(const InstanceProps& instanceProps);
         ~Instance();
 
         static VKAPI_ATTR VkBool32 VKAPI_CALL DebugUtilsMessengerCallback(VkDebugUtilsMessageSeverityFlagBitsEXT messageSeverity, VkDebugUtilsMessageTypeFlagsEXT messageType, const VkDebugUtilsMessengerCallbackDataEXT* pCallbackData, void* pUserData) {
-            if(messageSeverity >= VK_DEBUG_UTILS_MESSAGE_SEVERITY_WARNING_BIT_EXT) {
+            if(messageSeverity >= VK_DEBUG_UTILS_MESSAGE_SEVERITY_VERBOSE_BIT_EXT && messageSeverity < VK_DEBUG_UTILS_MESSAGE_SEVERITY_WARNING_BIT_EXT) {
                 VAS_LOG(pCallbackData->pMessage);
+            } else if(messageSeverity == VK_DEBUG_UTILS_MESSAGE_SEVERITY_WARNING_BIT_EXT) {
+                VAS_ERROR(pCallbackData->pMessage);
+            } else if(messageSeverity >= VK_DEBUG_UTILS_MESSAGE_SEVERITY_ERROR_BIT_EXT) {
+                VAS_FATAL(pCallbackData->pMessage);
             }
 
             return VK_FALSE;

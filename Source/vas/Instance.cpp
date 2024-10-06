@@ -29,7 +29,7 @@ namespace vas {
         }
     }
 
-    Instance::Instance(std::string_view title, std::span<const char*> extensions, std::span<const char*> layers, const InstanceVersion& instanceVersion, bool validationLayers, bool debugMessenger) {
+    Instance::Instance(std::string_view title, std::span<const char*> extensions, std::span<const char*> layers, const InstanceVersion& instanceVersion, bool validationLayers, bool debugMessenger, PFN_vkDebugUtilsMessengerCallbackEXT debugMessengerCallback) {
         VkApplicationInfo applicationInfo { };
         applicationInfo.sType = VK_STRUCTURE_TYPE_APPLICATION_INFO;
         applicationInfo.pNext = nullptr;
@@ -55,14 +55,20 @@ namespace vas {
         modifiedExtensions.assign(extensions.begin(), extensions.end());
         VkDebugUtilsMessengerCreateInfoEXT debugUtilsMessengerCreateInfo { };
         if(debugMessenger) {
-            modifiedExtensions.emplace_back("VK_EXT_debug_utils");
+            modifiedExtensions.emplace_back(VK_EXT_DEBUG_UTILS_EXTENSION_NAME);
 
             debugUtilsMessengerCreateInfo.sType = VK_STRUCTURE_TYPE_DEBUG_UTILS_MESSENGER_CREATE_INFO_EXT;
             debugUtilsMessengerCreateInfo.pNext = nullptr;
             debugUtilsMessengerCreateInfo.flags = 0;
             debugUtilsMessengerCreateInfo.messageSeverity = VK_DEBUG_UTILS_MESSAGE_SEVERITY_VERBOSE_BIT_EXT | VK_DEBUG_UTILS_MESSAGE_SEVERITY_WARNING_BIT_EXT | VK_DEBUG_UTILS_MESSAGE_SEVERITY_ERROR_BIT_EXT;
             debugUtilsMessengerCreateInfo.messageType = VK_DEBUG_UTILS_MESSAGE_TYPE_GENERAL_BIT_EXT | VK_DEBUG_UTILS_MESSAGE_TYPE_VALIDATION_BIT_EXT | VK_DEBUG_UTILS_MESSAGE_TYPE_PERFORMANCE_BIT_EXT;
-            debugUtilsMessengerCreateInfo.pfnUserCallback = DebugUtilsMessengerCallback;
+            
+            if(debugMessengerCallback) {
+                debugUtilsMessengerCreateInfo.pfnUserCallback = debugMessengerCallback;
+            } else {
+                debugUtilsMessengerCreateInfo.pfnUserCallback = DebugUtilsMessengerCallback;
+            }
+
             debugUtilsMessengerCreateInfo.pUserData = nullptr;
         }
 
@@ -93,6 +99,9 @@ namespace vas {
 
         VAS_LOG("instance created");
     }
+
+    Instance::Instance(const InstanceProps& instanceProps)
+    : Instance(instanceProps.title, instanceProps.extensions, instanceProps.layers, instanceProps.instanceVersion, instanceProps.validationLayers, instanceProps.debugMessenger, instanceProps.debugMessengerCallback) { }
 
     Instance::~Instance() {
         if(m_debugUtilsMessenger != VK_NULL_HANDLE) {
