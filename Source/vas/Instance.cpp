@@ -1,7 +1,7 @@
 #include "Instance.hpp"
 
 namespace vas {
-    uint32_t vkGetAvailableVulkan() {
+    uint32_t GetAvailableVulkan() {
         uint32_t version = VK_API_VERSION_1_0;
         auto pfnEnumerateInstanceVersion = PFN_vkEnumerateInstanceVersion(vkGetInstanceProcAddr(nullptr, "vkEnumerateInstanceVersion"));
         if(pfnEnumerateInstanceVersion != nullptr) {
@@ -39,7 +39,7 @@ namespace vas {
             case InstanceVersion::Vulkan1_1: applicationInfo.apiVersion = VK_API_VERSION_1_1; break;
             case InstanceVersion::Vulkan1_2: applicationInfo.apiVersion = VK_API_VERSION_1_2; break;
             case InstanceVersion::Vulkan1_3: applicationInfo.apiVersion = VK_API_VERSION_1_3; break;
-            case InstanceVersion::VulkanAvailable: applicationInfo.apiVersion = vkGetAvailableVulkan(); break;
+            case InstanceVersion::VulkanAvailable: applicationInfo.apiVersion = GetAvailableVulkan(); break;
         }
 
         VAS_LOG("api version - " + std::to_string(instanceVersion));
@@ -51,11 +51,23 @@ namespace vas {
 
         VAS_LOG("app title - " + std::string(applicationInfo.pApplicationName));
 
+        unsigned int extensionCount = 0;
+        vkEnumerateInstanceExtensionProperties(nullptr, &extensionCount, nullptr);
+        m_extensionsProperties.resize(extensionCount);
+        vkEnumerateInstanceExtensionProperties(nullptr, &extensionCount, m_extensionsProperties.data());
+
+        unsigned int layerCount = 0;
+        vkEnumerateInstanceLayerProperties(&layerCount, nullptr);
+        m_layersProperties.resize(layerCount);
+        vkEnumerateInstanceLayerProperties(&layerCount, m_layersProperties.data());
+
         std::vector<const char*> modifiedExtensions;
         modifiedExtensions.assign(extensions.begin(), extensions.end());
         VkDebugUtilsMessengerCreateInfoEXT debugUtilsMessengerCreateInfo { };
         if(debugMessenger) {
-            modifiedExtensions.emplace_back(VK_EXT_DEBUG_UTILS_EXTENSION_NAME);
+            if(IsExtensionAvailable(VK_EXT_DEBUG_UTILS_EXTENSION_NAME)) {
+                modifiedExtensions.emplace_back(VK_EXT_DEBUG_UTILS_EXTENSION_NAME);
+            }
 
             debugUtilsMessengerCreateInfo.sType = VK_STRUCTURE_TYPE_DEBUG_UTILS_MESSENGER_CREATE_INFO_EXT;
             debugUtilsMessengerCreateInfo.pNext = nullptr;
@@ -75,7 +87,9 @@ namespace vas {
         std::vector<const char*> modifiedLayers;
         modifiedLayers.assign(layers.begin(), layers.end());
         if(validationLayers) {
-            modifiedLayers.emplace_back("VK_LAYER_KHRONOS_validation");
+            if(IsLayerAvailable("VK_LAYER_KHRONOS_validation")) {
+                modifiedLayers.emplace_back("VK_LAYER_KHRONOS_validation");
+            }
         }
 
         VkInstanceCreateInfo instanceCreateInfo { };
@@ -110,6 +124,28 @@ namespace vas {
 
         vkDestroyInstance(GetInstance(), nullptr);
         VAS_LOG("instance destroyed");
+    }
+
+    bool Instance::IsExtensionAvailable(std::string_view extensionName) {
+        for(auto& extension : m_extensionsProperties) {
+            if(extensionName.compare(extension.extensionName)) {
+                return true;
+            }
+        }
+
+        VAS_ERROR(std::string(extensionName.data()) + " - extension not found");
+        return false;
+    }
+    
+    bool Instance::IsLayerAvailable(std::string_view layerName) {
+        for(auto& layer : m_layersProperties) {
+            if(layerName.compare( layer.layerName)) {
+                return true;
+            }
+        }
+
+        VAS_ERROR(std::string(layerName.data()) + " - layer not found");
+        return false;
     }
 
     VkInstance Instance::GetInstance() {

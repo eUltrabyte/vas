@@ -5,7 +5,7 @@
 #include "vas.hpp"
 
 namespace vas {
-    extern uint32_t vkGetAvailableVulkan();
+    extern uint32_t GetAvailableVulkan();
     extern VkResult CreateDebugUtilsMessengerEXT(VkInstance instance, const VkDebugUtilsMessengerCreateInfoEXT* pCreateInfo, const VkAllocationCallbacks* pAllocator, VkDebugUtilsMessengerEXT* pDebugMessenger);
     extern void DestroyDebugUtilsMessengerEXT(VkInstance instance, VkDebugUtilsMessengerEXT debugMessenger, const VkAllocationCallbacks* pAllocator);
 
@@ -37,6 +37,9 @@ namespace vas {
         Instance(const InstanceProps& instanceProps);
         ~Instance();
 
+        virtual bool IsExtensionAvailable(std::string_view extensionName);
+        virtual bool IsLayerAvailable(std::string_view layerName);
+
         static VKAPI_ATTR VkBool32 VKAPI_CALL DebugUtilsMessengerCallback(VkDebugUtilsMessageSeverityFlagBitsEXT messageSeverity, VkDebugUtilsMessageTypeFlagsEXT messageType, const VkDebugUtilsMessengerCallbackDataEXT* pCallbackData, void* pUserData) {
             if(messageSeverity >= VK_DEBUG_UTILS_MESSAGE_SEVERITY_VERBOSE_BIT_EXT && messageSeverity < VK_DEBUG_UTILS_MESSAGE_SEVERITY_WARNING_BIT_EXT) {
                 VAS_LOG(pCallbackData->pMessage);
@@ -53,6 +56,8 @@ namespace vas {
         VkDebugUtilsMessengerEXT GetDebugUtilsMessenger();
 
     private:
+        std::vector<VkExtensionProperties> m_extensionsProperties;
+        std::vector<VkLayerProperties> m_layersProperties;
         VkInstance m_instance;
         VkDebugUtilsMessengerEXT m_debugUtilsMessenger;
     
