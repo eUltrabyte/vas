@@ -24,6 +24,8 @@
 
 #include <vulkan/vulkan.h>
 
+#define VAS_BYTE(x) (1 << x)
+
 #ifdef VAS_DEBUG
     #define VAS_LOG(x) { std::cout << "[vas] [log] " << x << '\n'; }
     #define VAS_ERROR(x) { std::cerr << "[vas] [error] " << x << '\n'; }
@@ -39,5 +41,6 @@
 #endif
 
 #include "Instance.hpp"
+#include "PhysicalDevice.hpp"
 
 #endif
