@@ -14,6 +14,8 @@ set(VAS_SOURCE
     Source/vas/Instance.cpp
     Source/vas/PhysicalDevice.hpp
     Source/vas/PhysicalDevice.cpp
+    Source/vas/Device.hpp
+    Source/vas/Device.cpp
 )
 
 option(VAS_SHARED_LIBRARY "vas build using shared libraries" OFF)

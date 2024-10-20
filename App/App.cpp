@@ -5,6 +5,8 @@ auto main(int argc, char** argv) -> int {
     
     std::unique_ptr<vas::PhysicalDevice> physicalDevice = std::make_unique<vas::PhysicalDevice>(instance->GetInstance());
 
+    std::unique_ptr<vas::Device> device = std::make_unique<vas::Device>(physicalDevice->GetPhysicalDevice(), physicalDevice->GetPhysicalDeviceFeatures());
+
     std::cin.get();
     return 0;
 }
