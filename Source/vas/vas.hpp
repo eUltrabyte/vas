@@ -42,5 +42,6 @@
 
 #include "Instance.hpp"
 #include "PhysicalDevice.hpp"
+#include "Device.hpp"
 
 #endif
