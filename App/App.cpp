@@ -7,6 +7,8 @@ auto main(int argc, char** argv) -> int {
 
     std::unique_ptr<vas::Device> device = std::make_unique<vas::Device>(physicalDevice->GetPhysicalDevice(), physicalDevice->GetPhysicalDeviceFeatures());
 
+    std::unique_ptr<vas::QueueFamily> queueFamily = std::make_unique<vas::QueueFamily>(device->GetDevice(), device->GetQueueFamilyIndex(), device->GetQueueCount());
+
     std::cin.get();
     return 0;
 }

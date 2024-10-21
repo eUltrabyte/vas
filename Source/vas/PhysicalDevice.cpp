@@ -40,11 +40,11 @@ namespace vas {
         VAS_LOG("physical device is ready");
     }
 
-    VkPhysicalDeviceProperties PhysicalDevice::GetPhysicalDeviceProperties() {
+    VkPhysicalDeviceProperties& PhysicalDevice::GetPhysicalDeviceProperties() {
         return m_physicalDeviceProperties;
     }
     
-    VkPhysicalDeviceFeatures PhysicalDevice::GetPhysicalDeviceFeatures() {
+    VkPhysicalDeviceFeatures& PhysicalDevice::GetPhysicalDeviceFeatures() {
         return m_physicalDeviceFeatures;
     }
     

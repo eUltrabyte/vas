@@ -3,33 +3,40 @@
 namespace vas {
     Device::Device() { }
     
-    Device::Device(VkPhysicalDevice physicalDevice, VkPhysicalDeviceFeatures physicalDeviceFeatures, VkQueueFlagBits queueFlagBits) {
+    Device::Device(VkPhysicalDevice physicalDevice, VkPhysicalDeviceFeatures physicalDeviceFeatures, VkQueueFlagBits queueFlagBits)
+    : m_queueFamilyIndex(-1), m_queueCount(1) {
         uint32_t queueFamilyCount = 0;
         vkGetPhysicalDeviceQueueFamilyProperties(physicalDevice, &queueFamilyCount, nullptr);
         std::vector<VkQueueFamilyProperties> queueFamilies(queueFamilyCount);
         vkGetPhysicalDeviceQueueFamilyProperties(physicalDevice, &queueFamilyCount, queueFamilies.data());
 
-        uint32_t queueFamilyIndex = -1;
         for(int i = 0; i < queueFamilies.size(); ++i) {
             if(queueFamilies[i].queueFlags & queueFlagBits) {
                 VAS_LOG("queue family - " + std::to_string(i));
-                queueFamilyIndex = i;
+                m_queueFamilyIndex = i;
+
+                if(queueFamilies[i].queueCount > m_queueCount) {
+                    m_queueCount = 2;
+                }
+
                 break;
             }
         }
 
-        if(queueFamilyIndex == -1) {
+        if(m_queueFamilyIndex == -1) {
             VAS_LOG("none of queue families are suitable, using first available");
-            queueFamilyIndex = 0;
+            m_queueFamilyIndex = 0;
         }
+
+        VAS_LOG("queue count - " + std::to_string(m_queueCount));
 
         float queuePriority = 1.0f;
         VkDeviceQueueCreateInfo deviceQueueCreateInfo { };
         deviceQueueCreateInfo.sType = VK_STRUCTURE_TYPE_DEVICE_QUEUE_CREATE_INFO;
         deviceQueueCreateInfo.pNext = nullptr;
         deviceQueueCreateInfo.flags = 0;
-        deviceQueueCreateInfo.queueCount = 1;
-        deviceQueueCreateInfo.queueFamilyIndex = queueFamilyIndex;
+        deviceQueueCreateInfo.queueCount = m_queueCount;
+        deviceQueueCreateInfo.queueFamilyIndex = m_queueFamilyIndex;
         deviceQueueCreateInfo.pQueuePriorities = &queuePriority;
 
         VkDeviceCreateInfo deviceCreateInfo { };
@@ -56,6 +63,14 @@ namespace vas {
         vkDeviceWaitIdle(GetDevice());
         vkDestroyDevice(GetDevice(), nullptr);
         VAS_LOG("device destroyed");
+    }
+
+    uint32_t& Device::GetQueueFamilyIndex() {
+        return m_queueFamilyIndex;
+    }
+    
+    uint32_t& Device::GetQueueCount() {
+        return m_queueCount;
     }
 
     VkDevice Device::GetDevice() {

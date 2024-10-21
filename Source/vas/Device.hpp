@@ -20,11 +20,15 @@ namespace vas {
         Device();
         Device(VkPhysicalDevice physicalDevice, VkPhysicalDeviceFeatures physicalDeviceFeatures, VkQueueFlagBits queueFlagBits = VK_QUEUE_GRAPHICS_BIT);
         Device(const DeviceProps& deviceProps);
-        ~Device();
+        virtual ~Device();
 
-        VkDevice GetDevice();
+        virtual uint32_t& GetQueueFamilyIndex();
+        virtual uint32_t& GetQueueCount();
+        virtual VkDevice GetDevice();
 
     private:
+        uint32_t m_queueFamilyIndex;
+        uint32_t m_queueCount;
         VkDevice m_device;
 
     };

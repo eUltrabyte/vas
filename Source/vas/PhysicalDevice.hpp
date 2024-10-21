@@ -9,11 +9,11 @@ namespace vas {
     public:
         PhysicalDevice();
         PhysicalDevice(VkInstance instance);
-        ~PhysicalDevice() = default;
+        virtual ~PhysicalDevice() = default;
 
-        VkPhysicalDeviceProperties GetPhysicalDeviceProperties();
-        VkPhysicalDeviceFeatures GetPhysicalDeviceFeatures();
-        VkPhysicalDevice GetPhysicalDevice();
+        virtual VkPhysicalDeviceProperties& GetPhysicalDeviceProperties();
+        virtual VkPhysicalDeviceFeatures& GetPhysicalDeviceFeatures();
+        virtual VkPhysicalDevice GetPhysicalDevice();
 
     private:
         VkPhysicalDeviceProperties m_physicalDeviceProperties;

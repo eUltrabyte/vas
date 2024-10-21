@@ -35,7 +35,7 @@ namespace vas {
     public:
         Instance(std::string_view title = "vas", std::span<const char*> extensions = std::span<const char*>(), std::span<const char*> layers = std::span<const char*>(), const InstanceVersion& instanceVersion = InstanceVersion::VulkanAvailable, bool validationLayers = false, bool debugMessenger = false, PFN_vkDebugUtilsMessengerCallbackEXT debugMessengerCallback = nullptr);
         Instance(const InstanceProps& instanceProps);
-        ~Instance();
+        virtual ~Instance();
 
         virtual bool IsExtensionAvailable(std::string_view extensionName);
         virtual bool IsLayerAvailable(std::string_view layerName);
@@ -52,8 +52,8 @@ namespace vas {
             return VK_FALSE;
         }
 
-        VkInstance GetInstance();
-        VkDebugUtilsMessengerEXT GetDebugUtilsMessenger();
+        virtual VkInstance GetInstance();
+        virtual VkDebugUtilsMessengerEXT GetDebugUtilsMessenger();
 
     private:
         std::vector<VkExtensionProperties> m_extensionsProperties;
