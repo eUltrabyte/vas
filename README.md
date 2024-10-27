@@ -11,7 +11,7 @@ vas is library for vulkan rendering api. It uses cmake, c++20 and vulkan headers
 - [x] Instance creation
 - [x] Debug messenger creation
 - [x] Getting physical devices
-- [ ] Physical devices choosing criteria
+- [x] Physical devices choosing criteria
 - [x] Device creation
 - [x] Getting queues
 - [ ] Swapchain creation

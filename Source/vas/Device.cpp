@@ -3,7 +3,7 @@
 namespace vas {
     Device::Device() { }
     
-    Device::Device(VkPhysicalDevice physicalDevice, VkPhysicalDeviceFeatures physicalDeviceFeatures, VkQueueFlagBits queueFlagBits)
+    Device::Device(VkPhysicalDevice physicalDevice, VkPhysicalDeviceFeatures physicalDeviceFeatures, VkQueueFlagBits queueFlagBits, std::span<const char*> extensions, std::span<const char*> layers)
     : m_queueFamilyIndex(-1), m_queueCount(1) {
         uint32_t queueFamilyCount = 0;
         vkGetPhysicalDeviceQueueFamilyProperties(physicalDevice, &queueFamilyCount, nullptr);
@@ -43,10 +43,10 @@ namespace vas {
         deviceCreateInfo.sType = VK_STRUCTURE_TYPE_DEVICE_CREATE_INFO;
         deviceCreateInfo.pNext = nullptr;
         deviceCreateInfo.flags = 0;
-        deviceCreateInfo.enabledExtensionCount = 0;
-        deviceCreateInfo.ppEnabledExtensionNames = nullptr;
-        deviceCreateInfo.enabledLayerCount = 0;
-        deviceCreateInfo.ppEnabledLayerNames = nullptr;
+        deviceCreateInfo.enabledExtensionCount = extensions.size();
+        deviceCreateInfo.ppEnabledExtensionNames = extensions.data();
+        deviceCreateInfo.enabledLayerCount = layers.size();
+        deviceCreateInfo.ppEnabledLayerNames = layers.data();
         deviceCreateInfo.queueCreateInfoCount = 1;
         deviceCreateInfo.pQueueCreateInfos = &deviceQueueCreateInfo;
         deviceCreateInfo.pEnabledFeatures = &physicalDeviceFeatures;
@@ -57,7 +57,7 @@ namespace vas {
     }
 
     Device::Device(const DeviceProps& deviceProps)
-    : Device(deviceProps.physicalDevice, deviceProps.physicalDeviceFeatures, deviceProps.queueFlagBits) {}
+    : Device(deviceProps.physicalDevice, deviceProps.physicalDeviceFeatures, deviceProps.queueFlagBits, deviceProps.extensions, deviceProps.layers) {}
 
     Device::~Device() {
         vkDeviceWaitIdle(GetDevice());

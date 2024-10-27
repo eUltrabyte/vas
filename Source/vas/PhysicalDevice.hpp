@@ -5,10 +5,21 @@
 #include "vas.hpp"
 
 namespace vas {
+    struct VAS_API PhysicalDeviceCriteria {
+        PhysicalDeviceCriteria() = default;
+        PhysicalDeviceCriteria(const VkPhysicalDeviceProperties& physicalDeviceProperties, const VkPhysicalDeviceFeatures& physicalDeviceFeatures) 
+        : physicalDeviceProperties(physicalDeviceProperties), physicalDeviceFeatures(physicalDeviceFeatures), check(true) { }
+        ~PhysicalDeviceCriteria() = default;
+
+        VkPhysicalDeviceProperties physicalDeviceProperties;
+        VkPhysicalDeviceFeatures physicalDeviceFeatures;
+        bool check = false;
+    };
+
     class VAS_API PhysicalDevice {
     public:
         PhysicalDevice();
-        PhysicalDevice(VkInstance instance);
+        PhysicalDevice(VkInstance instance, const PhysicalDeviceCriteria& physicalDeviceCriteria = PhysicalDeviceCriteria());
         virtual ~PhysicalDevice() = default;
 
         virtual VkPhysicalDeviceProperties& GetPhysicalDeviceProperties();
