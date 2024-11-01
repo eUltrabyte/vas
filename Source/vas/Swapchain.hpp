@@ -7,8 +7,10 @@
 namespace vas {
     class VAS_API Swapchain {
     public:
-        Swapchain(VkDevice device);
+        Swapchain(VkPhysicalDevice physicalDevice, VkDevice device, VkSurfaceKHR surface, VkExtent2D extent);
         virtual ~Swapchain();
+
+        virtual void Recreate(VkSurfaceKHR surface, VkExtent2D extent);
 
         virtual VkSwapchainKHR GetSwapchain();
 
@@ -16,6 +18,10 @@ namespace vas {
         VkDevice p_device;
 
     private:
+        uint32_t m_imageCount;
+        VkSurfaceFormatKHR m_surfaceFormat;
+        VkPresentModeKHR m_presentMode;
+        VkSurfaceCapabilitiesKHR m_surfaceCapabilities;
         VkSwapchainKHR m_swapchain;
 
     };

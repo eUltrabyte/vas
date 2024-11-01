@@ -44,5 +44,6 @@
 #include "PhysicalDevice.hpp"
 #include "QueueFamily.hpp"
 #include "Device.hpp"
+#include "Swapchain.hpp"
 
 #endif
