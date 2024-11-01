@@ -14,8 +14,12 @@ set(VAS_SOURCE
     Source/vas/Instance.cpp
     Source/vas/PhysicalDevice.hpp
     Source/vas/PhysicalDevice.cpp
+    Source/vas/QueueFamily.hpp
+    Source/vas/QueueFamily.cpp
     Source/vas/Device.hpp
     Source/vas/Device.cpp
+    Source/vas/Swapchain.hpp
+    Source/vas/Swapchain.cpp
 )
 
 option(VAS_SHARED_LIBRARY "vas build using shared libraries" OFF)
