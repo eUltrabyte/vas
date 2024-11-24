@@ -1,6 +1,6 @@
 #pragma once
-#ifndef VAS_PRECOMPILED_HEADER
-#define VAS_PRECOMPILED_HEADER
+#ifndef RAINBOW_PRECOMPILED_HEADER
+#define RAINBOW_PRECOMPILED_HEADER
 
 #include <iostream>
 #include <fstream>

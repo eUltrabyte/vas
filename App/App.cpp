@@ -1,53 +1,52 @@
-#define VK_USE_PLATFORM_XCB_KHR
-#include <vas/vas.hpp>
-
-#include <xcb/xcb.h>
-#include <xcb/xproto.h>
+#include <rainbow/rainbow.hpp>
 
 auto main(int argc, char** argv) -> int {
-    std::vector<const char*> instanceExtensions = {
-        "VK_KHR_surface",
-        "VK_KHR_xcb_surface"
-    };
-
-    std::unique_ptr<vas::Instance> instance = std::make_unique<vas::Instance>("App", std::span<const char*>(instanceExtensions), std::span<const char*>(), vas::InstanceVersion::VulkanAvailable, true, true);
+    RBW_RESULT result = RBW_SUCCESS;
+    std::unique_ptr<rbw::Console> console = std::make_unique<rbw::Console>();
+    result = console->Init();
     
-    std::unique_ptr<vas::PhysicalDevice> physicalDevice = std::make_unique<vas::PhysicalDevice>(instance->GetInstance());
+    std::cout << rbw::Default << "test\n";
+    std::cout << rbw::Bold << "test\n";
+    std::cout << rbw::Underline << "test\n";
+    std::cout << rbw::Reverse << "test\n";
+    std::cout << rbw::Normal << "test\n";
 
-    std::vector<const char*> deviceExtensions = {
-        "VK_KHR_swapchain"
-    };
+    std::cout << rbw::foreground::Black << "test\n";
+    std::cout << rbw::foreground::DarkRed << "test\n";
+    std::cout << rbw::foreground::DarkGreen << "test\n";
+    std::cout << rbw::foreground::DarkYellow << "test\n";
+    std::cout << rbw::foreground::DarkBlue << "test\n";
+    std::cout << rbw::foreground::DarkMagenta << "test\n";
+    std::cout << rbw::foreground::DarkCyan << "test\n";
+    std::cout << rbw::foreground::DarkWhite << "test\n";
 
-    std::unique_ptr<vas::Device> device = std::make_unique<vas::Device>(physicalDevice->GetPhysicalDevice(), physicalDevice->GetPhysicalDeviceFeatures(), VK_QUEUE_GRAPHICS_BIT, std::span<const char*>(deviceExtensions));
+    std::cout << rbw::foreground::BrightBlack << "test\n";
+    std::cout << rbw::foreground::BrightRed << "test\n";
+    std::cout << rbw::foreground::BrightGreen << "test\n";
+    std::cout << rbw::foreground::BrightYellow << "test\n";
+    std::cout << rbw::foreground::BrightBlue << "test\n";
+    std::cout << rbw::foreground::BrightMagenta << "test\n";
+    std::cout << rbw::foreground::BrightCyan << "test\n";
+    std::cout << rbw::foreground::White << "test\n";
 
-    std::unique_ptr<vas::QueueFamily> queueFamily = std::make_unique<vas::QueueFamily>(device->GetDevice(), device->GetQueueFamilyIndex(), device->GetQueueCount());
+    std::cout << rbw::background::Black << "test\n";
+    std::cout << rbw::background::DarkRed << "test\n";
+    std::cout << rbw::background::DarkGreen << "test\n";
+    std::cout << rbw::background::DarkYellow << "test\n";
+    std::cout << rbw::background::DarkBlue << "test\n";
+    std::cout << rbw::background::DarkMagenta << "test\n";
+    std::cout << rbw::background::DarkCyan << "test\n";
+    std::cout << rbw::background::DarkWhite << "test\n";
 
-    xcb_connection_t* connection = xcb_connect(0, 0);
-    const xcb_setup_t* setup = xcb_get_setup(connection);
-    xcb_screen_iterator_t iter = xcb_setup_roots_iterator(setup);
-    xcb_screen_t* screen = iter.data;
+    std::cout << rbw::background::BrightBlack << "test\n";
+    std::cout << rbw::background::BrightRed << "test\n";
+    std::cout << rbw::background::BrightGreen << "test\n";
+    std::cout << rbw::background::BrightYellow << "test\n";
+    std::cout << rbw::background::BrightBlue << "test\n";
+    std::cout << rbw::background::BrightMagenta << "test\n";
+    std::cout << rbw::background::BrightCyan << "test\n";
+    std::cout << rbw::background::White << "test\n";
 
-    xcb_window_t window = xcb_generate_id (connection);
-    xcb_create_window(connection, XCB_COPY_FROM_PARENT, window, screen->root, 0, 0, 640, 360, 10, XCB_WINDOW_CLASS_INPUT_OUTPUT, screen->root_visual, 0, 0);
-    xcb_map_window(connection, window);
-    xcb_flush(connection);
-
-    VkSurfaceKHR surface;
-
-    VkXcbSurfaceCreateInfoKHR xcbSurfaceCreateInfo { };
-    xcbSurfaceCreateInfo.sType = VK_STRUCTURE_TYPE_XCB_SURFACE_CREATE_INFO_KHR;
-    xcbSurfaceCreateInfo.pNext = nullptr;
-    xcbSurfaceCreateInfo.flags = 0;
-    xcbSurfaceCreateInfo.connection = connection;
-    xcbSurfaceCreateInfo.window = window;
-
-    VAS_ASSERT(vkCreateXcbSurfaceKHR(instance->GetInstance(), &xcbSurfaceCreateInfo, nullptr, &surface));
-
-    std::unique_ptr<vas::Swapchain> swapchain = std::make_unique<vas::Swapchain>(physicalDevice->GetPhysicalDevice(), device->GetDevice(), surface, VkExtent2D { 640, 360 });
-
-    std::cin.get();
-    swapchain.reset();
-    vkDestroySurfaceKHR(instance->GetInstance(), surface, nullptr);
-    xcb_disconnect(connection);
-    return 0;
+    console->Terminate();
+    return result;
 }

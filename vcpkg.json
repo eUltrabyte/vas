@@ -1,10 +1,6 @@
 {
-  "name": "vas",
-  "version": "1.0.0",
-  "homepage": "https://github.com/eUltrabyte/vas",
-  "license": "MIT",
-  "dependencies": [
-    "vulkan",
-    "vulkan-headers"
-  ]
+  "name": "rainbow",
+  "version": "1.0",
+  "homepage": "https://github.com/eUltrabyte/rainbow",
+  "license": "MIT"
 }

@@ -1,38 +1,26 @@
 [![Language](https://img.shields.io/badge/language-C++-blue.svg)](https://isocpp.org/)
 [![Standard](https://img.shields.io/badge/c%2B%2B-20-blue.svg)](https://en.wikipedia.org/wiki/C%2B%2B#Standardization)
-[![MIT License](https://img.shields.io/badge/License-MIT-green.svg)](https://choosealicense.com/licenses/mit/)
+[![License](https://img.shields.io/github/license/eUltrabyte/rainbow)](https://github.com/eUltrabyte/rainbow/blob/main/LICENSE)
+[![Pull Requests](https://img.shields.io/github/issues-pr/eUltrabyte/rainbow)](https://github.com/eUltrabyte/rainbow/pulls)
+[![Forks](https://img.shields.io/github/forks/eUltrabyte/rainbow?style=flat)](https://github.com/eUltrabyte/rainbow)
 
-# Vulkan Application Setup
+# rainbow
 
-vas is library for vulkan rendering api. It uses cmake, c++20 and vulkan headers. The goal of this project is to simplify first steps in building vulkan-based app.
-
-### TODO
-
-- [x] Instance creation
-- [x] Debug messenger creation
-- [x] Getting physical devices
-- [x] Physical devices choosing criteria
-- [x] Device creation
-- [x] Getting queues
-- [x] Swapchain creation
-
-### Libraries
-
-[Vulkan SDK](https://lunarg.com/vulkan-sdk/) - Vulkan is a new generation graphics and compute API that provides high-efficiency, cross-platform access to modern graphics processing units, which are used in a wide variety of devices from PCs and consoles to mobile phones and embedded platforms.
+rainbow is library for colors and formatting in console. It uses cmake and c++20.
 
 ### Installation
 
 Compilation should work under g++14, clang18 and latest msvc.
 ```bash
-git clone https://github.com/eUltrabyte/vas.git
-cd vas && mkdir Build
+git clone https://github.com/eUltrabyte/rainbow.git
+cd rainbow && mkdir Build
 cd Build && cmake ..
 ```
 After successful compilation you just need to add library to your project.
 
 ### Bugs
 
-Bugs are reported to [issue tracker](https://github.com/eUltrabyte/vas/issues)
+Bugs are reported to [issue tracker](https://github.com/eUltrabyte/rainbow/issues)
 
 #### Report Example
 
